@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+<div class="col-lg-4 mt-4 shadow-lg offset-1">
+    <div>
+        <h1 class="bg-info text-center">ADD TODO</h1>
+        <div class="mt-4">
+        <form action="/showtodo/" method="post">
+            {% csrf_token %}
+            <!-- <b>{{sfs.as_p}}</b> -->
+            {% for form in sfs %}
+           <b> {{form.label_tag}} {{form}} {{form.errors}} </b>
+           <br><br>
+            {% endfor %}
+
+            <input type="submit" class="btn btn-info" value="ADD">
+
+        </form>
+      </div>
+    </div>
+
+</div>
+<div class="col mt-4 ">
+  <!-- <h1 class="bg-success text-center p-2">TODO LIST</h1> -->
+{% if todos|length == 0 %}
+<div class="alert alert-danger ">
+  <h1 class="text-center">NO TODOS ADD</h1>
+</div>
+
+{% else %}
+
+    <table class="table">
+
+        <thead>
+          <tr>
+            <th scope="col">Sr no.</th>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">priority</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for x in todos  %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{x.title}}</td>
+            <td>
+              
+              <!-- {{x.status}} -->
+              {% if x.status == 'P' %}
+              🕥
+              {% else %}
+              ✅
+              {% endif %}
+
+
+            </td>
+            <td>{{x.priority}}</td>
+            <td> 
+              
+              
+              <a href="{% url 'delete' x.id %}" class="btn" >🗑️</a>
+              {% if x.status == 'P' %}
+              <a href="change-status/{{x.id}}/P" class="btn">✅</a>
+              {% else %}
+              <a href="change-status/{{x.id}}/C" class="btn">🕥</a>
+              {% endif %}
+
+            
+            
+            </td>
+          </tr>
+          {% endfor %}
+          
+        </tbody>
+      </table>
+      {% endif %}
+</div>
+</div>
+
+
+
+{% endblock content %}
